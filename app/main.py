@@ -29,7 +29,6 @@ async def add_no_cache_header(request: Request, call_next):
 @app.get("/decks")
 def get_decks():
     decks = models.DeckType.get_me()
-    decks = json.dumps(decks)
     return JSONResponse(content=decks)
 
 
