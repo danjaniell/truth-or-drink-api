@@ -29,7 +29,7 @@ class CardCollection(dict[str, Card]):
         """
         Load file and store contents
         """
-        json_file = json.loads(open(source, "r").read())
+        json_file = json.loads(open(source, "r", encoding='utf-8').read())
 
         for key, value in json_file.items():
             id: int = 0
