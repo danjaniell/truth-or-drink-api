@@ -29,14 +29,13 @@ class CardCollection(dict[str, Card]):
         """
         Load file and store contents
         """
-        with open(source, "r") as f:
-            deck1 = json.load(f)["OnTheRocks"]
+        json_file = json.loads(open(source, "r").read())
 
-        id: int = 0
-        for item in deck1:
-            key = self.generate_key(DeckType(item["from_deck"]), id)
-            self[key] = item
-            id = id + 1
+        for key, value in json_file.items():
+            id: int = 0
+            for item in value:
+                self[self.generate_key(DeckType[key], id)] = item
+                id = id + 1
 
     def generate_key(self, deck_type: DeckType, id: int):
         return f"{deck_type.name}_{id}"
