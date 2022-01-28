@@ -1,4 +1,5 @@
 import json
+import random
 from . import models
 from fastapi import Request, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -62,5 +63,8 @@ def get_all_cards():
 
 @app.get("/draw", response_model=models.Card)
 def draw():
-    card = card_collection[id]
+    """
+    Randomly Draw a Card
+    """
+    card = random.choice(list(card_collection.values()))
     return card
