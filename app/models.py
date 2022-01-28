@@ -35,7 +35,7 @@ class CardResponse(BaseModel):
 
 
 class CardCollection(dict[str, Card]):
-    def __init__(self, source="https://gist.githubusercontent.com/danjaniell/f88d4789a388f645c4fea29f89e7f47e/raw/9fe6a255587f3577781f0547c861352773fc6cbe/truth-or-drink_cards.json"):
+    def __init__(self, source: str):
         """
         Load file and store contents
         """

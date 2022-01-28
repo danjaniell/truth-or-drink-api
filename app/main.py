@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
+source = "https://gist.githubusercontent.com/danjaniell/f88d4789a388f645c4fea29f89e7f47e/raw/9fe6a255587f3577781f0547c861352773fc6cbe/truth-or-drink_cards.json"
 
 
 app.add_middleware(
@@ -32,7 +33,7 @@ def get_decks():
     return JSONResponse(content=decks)
 
 
-card_collection = models.CardCollection()
+card_collection = models.CardCollection(source)
 
 
 @app.get("/all-cards/from-deck/{from_deck}")
