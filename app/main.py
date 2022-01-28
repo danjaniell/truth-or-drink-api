@@ -35,13 +35,17 @@ def get_decks():
 card_collection = models.CardCollection()
 
 
-@app.get("/allCards")
+@app.get("/all-cards/from-deck/{from_deck}")
 def get_all_cards_from_deck(from_deck: models.DeckType):
-    if (from_deck == 0):
-        cards = [item for item in card_collection.values()]
-    else:
-        cards = [item for item in card_collection.values()
-                 if item["from_deck"] == from_deck]
+    cards = [item for item in card_collection.values()
+             if item["from_deck"] == from_deck]
+    response = json.loads(models.CardResponse(cards=cards).json())
+    return JSONResponse(content=response)
+
+
+@app.get("/all-cards")
+def get_all_cards():
+    cards = [item for item in card_collection.values()]
     response = json.loads(models.CardResponse(cards=cards).json())
     return JSONResponse(content=response)
 

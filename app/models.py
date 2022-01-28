@@ -6,7 +6,6 @@ from urllib.request import urlopen
 
 
 class DeckType(IntEnum):
-    All = 0
     OnTheRocks = 1,
     ExtraDirty = 2,
     HappyHour = 3,
