@@ -38,10 +38,12 @@ card_collection = models.CardCollection()
 @app.get("/allCards")
 def get_all_cards_from_deck(from_deck: models.DeckType):
     if (from_deck == 0):
-        return JSONResponse(content=card_collection)
-    cards = [item for item in card_collection.values()
-             if item["from_deck"] == from_deck]
-    return JSONResponse(content=cards)
+        cards = [item for item in card_collection.values()]
+    else:
+        cards = [item for item in card_collection.values()
+                 if item["from_deck"] == from_deck]
+    response = json.loads(models.CardResponse(cards=cards).json())
+    return JSONResponse(content=response)
 
 
 @app.get("/draw", response_model=models.Card)
