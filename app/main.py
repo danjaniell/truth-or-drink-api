@@ -45,8 +45,9 @@ def get_all_cards_from_deck(from_deck: models.DeckType):
     """
     Return all cards in a given deck
     """
-    cards = [item for item in card_collection.values()
-             if item["from_deck"] == from_deck]
+    cards = [
+        item for item in card_collection.values() if item["from_deck"] == from_deck
+    ]
     response = json.loads(models.CardResponse(cards=cards).json())
     return JSONResponse(content=response)
 
@@ -67,4 +68,16 @@ def draw():
     Randomly Draw a Card
     """
     card = random.choice(list(card_collection.values()))
+    return card
+
+
+@app.get("/draw/from-deck/{deck_type}", response_model=models.Card)
+def draw(deck_type: models.DeckType):
+    """
+    Randomly Draw a Card from a specified deck
+    """
+    deck = list(
+        filter(lambda x: x["from_deck"] == deck_type, list(card_collection.values()))
+    )
+    card = random.choice(deck)
     return card
