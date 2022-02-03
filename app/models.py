@@ -6,10 +6,10 @@ from urllib.request import urlopen
 
 
 class DeckType(IntEnum):
-    OnTheRocks = 1,
-    ExtraDirty = 2,
-    HappyHour = 3,
-    LastCall = 4,
+    OnTheRocks = (1,)
+    ExtraDirty = (2,)
+    HappyHour = (3,)
+    LastCall = (4,)
     WithATwist = 5
 
     def get_me():
@@ -30,7 +30,7 @@ class CardResponse(BaseModel):
     cards: list
 
     def __init__(__pydantic_self__, **data: Any) -> None:
-        data['count'] = len(data['cards'])
+        data["count"] = len(data["cards"])
         super().__init__(**data)
 
 
@@ -39,7 +39,7 @@ class CardCollection(dict[str, Card]):
         """
         Load file and store contents
         """
-        json_file = json.loads(str(urlopen(source).read(), encoding='utf-8'))
+        json_file = json.loads(str(urlopen(source).read(), encoding="utf-8"))
 
         for key, value in json_file.items():
             id: int = 0
@@ -49,3 +49,7 @@ class CardCollection(dict[str, Card]):
 
     def generate_key(self, deck_type: DeckType, id: int):
         return f"{deck_type.name}_{id}"
+
+
+class StartRequest(BaseModel):
+    players: list[str]

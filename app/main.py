@@ -1,31 +1,13 @@
+from . import startup
+from . import models
+from . import services
+from fastapi.responses import JSONResponse
 import json
 import random
-from . import models
-from fastapi import Request, FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
-app = FastAPI()
-source = "https://gist.githubusercontent.com/danjaniell/f88d4789a388f645c4fea29f89e7f47e/raw/9fe6a255587f3577781f0547c861352773fc6cbe/truth-or-drink_cards.json"
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost", "http://localhost:8080"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-@app.middleware("http")
-async def add_no_cache_header(request: Request, call_next):
-    """
-    Disables caching in vercel
-    """
-    response = await call_next(request)
-    response.headers["Cache-Control"] = "no-cache"
-    return response
+app = startup.app
+redisDb = startup.redisDb
+card_collection = models.CardCollection(startup.source)
 
 
 @app.get("/decks")
@@ -35,9 +17,6 @@ def get_decks():
     """
     decks = models.DeckType.get_me()
     return JSONResponse(content=decks)
-
-
-card_collection = models.CardCollection(source)
 
 
 @app.get("/all-cards/from-deck/{from_deck}")
@@ -81,3 +60,17 @@ def draw(deck_type: models.DeckType):
     )
     card = random.choice(deck)
     return card
+
+
+@app.post("/start")
+def start(request: models.StartRequest):
+    if redisDb.get("Current"):
+        return False
+
+    sid = "SESH-" + services.generate_id(4)
+    redisDb.set("Current", sid)
+
+    session = {"PL-" + services.generate_id(3): i for i in request.players}
+    redisDb.hmset(sid, session)
+
+    return True
