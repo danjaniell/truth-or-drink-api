@@ -6,16 +6,18 @@ from urllib.request import urlopen
 
 
 class DeckType(IntEnum):
-    OnTheRocks = (1,)
-    ExtraDirty = (2,)
-    HappyHour = (3,)
-    LastCall = (4,)
+    OnTheRocks = 1 
+    ExtraDirty = 2
+    HappyHour = 3
+    LastCall = 4
     WithATwist = 5
 
     def get_me():
-        value: dict[str, int] = {}
+        value: dict[str, list] = {}
+        list = []
         for deck in DeckType:
-            value[deck.name] = int(deck)
+            list.append(deck.name)
+        value["decks"] = list
         return value
 
 
