@@ -6,7 +6,7 @@ from urllib.request import urlopen
 
 
 class DeckType(IntEnum):
-    OnTheRocks = 1 
+    OnTheRocks = 1
     ExtraDirty = 2
     HappyHour = 3
     LastCall = 4
@@ -55,3 +55,7 @@ class CardCollection(dict[str, Card]):
 
 class StartRequest(BaseModel):
     players: list[str]
+
+
+class EndRequest(BaseModel):
+    sid: str

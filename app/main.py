@@ -65,7 +65,12 @@ def draw(deck_type: models.DeckType):
 @app.post("/start")
 def start(request: models.StartRequest):
     if redisDb.get("Current"):
-        return False
+        return JSONResponse(
+            content={
+                "success": False,
+                "data": "There's currently an existing session.",
+            }
+        )
 
     sid = "SESH-" + services.generate_id(4)
     redisDb.set("Current", sid)
@@ -73,4 +78,33 @@ def start(request: models.StartRequest):
     session = {"PL-" + services.generate_id(3): i for i in request.players}
     redisDb.hmset(sid, session)
 
-    return True
+    return JSONResponse(
+        content={
+            "success": True,
+            "sid": sid,
+            "pids": session,
+        }
+    )
+
+
+@app.post("/end")
+def start(request: models.EndRequest):
+    currentSession = redisDb.get("Current")
+
+    if not currentSession:
+        return JSONResponse(
+            content={
+                "success": False,
+                "data": "There are no sessions.",
+            }
+        )
+
+    redisDb.delete("Current")
+    redisDb.delete(request.sid)
+
+    return JSONResponse(
+        content={
+            "success": True,
+            "data": "Succesfully ended existing session.",
+        }
+    )
