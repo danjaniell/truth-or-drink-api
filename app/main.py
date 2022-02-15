@@ -62,6 +62,16 @@ def draw(deck_type: models.DeckType):
     return card
 
 
+@app.get("/get-current-session")
+def get_current_session():
+    current_session = redisDb.get("Current").decode("utf-8")
+    return JSONResponse(
+        content={
+            "data": current_session,
+        }
+    )
+
+
 @app.post("/start")
 def start(request: models.StartRequest):
     if redisDb.get("Current"):
@@ -88,7 +98,7 @@ def start(request: models.StartRequest):
 
 
 @app.post("/end")
-def start(request: models.EndRequest):
+def end(request: models.EndRequest):
     currentSession = redisDb.get("Current")
 
     if not currentSession:
